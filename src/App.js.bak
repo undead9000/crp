@@ -1,0 +1,137 @@
+import React from 'react';
+import './App.css';
+
+function validate(input_value){
+  return input_value.replace(/\W|\d/g, '').substr(0, 1).toUpperCase();
+}
+
+class Cell extends React.Component {
+  render() {
+    return (
+      <input 
+        onChange={this.props.onChange}
+        style={{left: 40*(this.props.column-1)+'px', top: 40*(this.props.row-1)+'px'}}
+        //defaultValue={this.props.value}
+        index={this.props.index}
+        className="input"
+        type="text" 
+      />
+    )
+  }
+}
+
+class Question extends React.Component {
+  render() {
+    return (
+      <li>{this.props.text}</li>
+    )
+  }
+}
+
+class Field extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      /*cells: [
+        {index:0, position_top:1, position_left:1, value: ' '},
+        {index:1, position_top:2, position_left:1, value: ' '},
+        {index:2, position_top:3, position_left:1, value: ' '},
+      ],*/
+      questions: [
+        {
+          index: 0,
+          text: 'Первый вопрос?',
+          orientation: 'vertical',
+          liters: [
+            {index:0, position_top:1, position_left:1, value: 'A'},
+            {index:1, position_top:2, position_left:1, value: 'B'},
+            {index:2, position_top:3, position_left:1, value: 'C'},
+          ],
+        },
+      ],
+    };
+  }
+
+  renderQuestion(i) {
+    return <Question text={this.state.questions[i].text}/>
+  }
+
+  handleChange(event) {
+    let letter = validate(event.target.value);
+    let index = event.target.getAttribute('index');
+    //let cells = this.state.cells;
+
+    let liters = this.state.questions
+    
+    if(letter.lenght !== 0) console.log(letter === this.state.questions[0].liters[index].value ? true: false);
+    //cells[index].value = letter;
+    //this.setState({cells: cells});
+  }
+
+  renderAllCells(self) {
+    let cells = self.state.cells.map(function(item, index) {
+      return self.renderCell(index);
+    });
+    return cells;
+  }
+
+  renderRow(self, row_index) {
+    let row = self.state.questions[row_index].liters.map(function(item, index) {
+      return self.renderCell(row_index, index);
+    });
+    return row;
+  }
+
+  renderCell(row_index, index) {
+    return (
+      <Cell 
+        row={this.state.questions[row_index].liters[index].position_top} 
+        column={this.state.questions[row_index].liters[index].position_left} 
+        value={this.state.questions[row_index].liters[index].value}
+        index={this.state.questions[row_index].liters[index].index}
+        key={index}
+        onChange={this.handleChange}
+      />
+    );
+  }
+
+  /*renderCell(i) {
+    return (
+      <Cell 
+        row={this.state.cells[i].position_top} 
+        column={this.state.cells[i].position_left} 
+        value={this.state.cells[i].value}
+        index={this.state.cells[i].index}
+        key={i}
+        onChange={this.handleChange}
+      />
+    );
+  }*/
+
+  render() {
+    return (
+      <div className="container">
+        <div className="field">
+          {/*this.renderAllCells(this)*/}
+          {this.renderRow(this, 0)}
+        </div>
+        <div className="questions">
+          <ol>
+            {this.renderQuestion(0)}
+          </ol>  
+        </div>
+      </div>
+    )
+  }
+}
+
+function App() {
+  return (
+    <div className="App">
+      <Field />
+    </div>
+  );
+}
+
+export default App;
