@@ -110,8 +110,12 @@ class Field extends React.Component {
     };
   }
 
-  renderQuestion(i) {
-    return <Question text={this.state.questions[i].text} solved={this.state.questions[i].solved}/>
+  renderQuestions() {
+    let questions = [];
+    for(let i = 0; i < this.state.questions.length; i++) {
+      questions.push(<Question text={this.state.questions[i].text} solved={this.state.questions[i].solved} key={i}/>)
+    }
+    return questions;
   }
 
   validate(input_value){
@@ -149,6 +153,14 @@ class Field extends React.Component {
     return row;
   }
 
+  renderRows(self) {
+    let rows = [];
+    for(let i = 0; i < self.state.questions.length; i++) {
+      rows.push(self.renderRow(self, i));
+    }
+    return rows;
+  }
+
   renderCell(row_index, index, className) {
     return (
       <Cell 
@@ -167,23 +179,11 @@ class Field extends React.Component {
     return (
       <div className="container">
         <div className="field">
-          {this.renderRow(this, 0)}
-          {this.renderRow(this, 1)}
-          {this.renderRow(this, 2)}
-          {this.renderRow(this, 3)}
-          {this.renderRow(this, 4)}
-          {this.renderRow(this, 5)}
-          {this.renderRow(this, 6)}
+          {this.renderRows(this)}
         </div>
         <div className="questions">
           <ol>
-            {this.renderQuestion(0)}
-            {this.renderQuestion(1)}
-            {this.renderQuestion(2)}
-            {this.renderQuestion(3)}
-            {this.renderQuestion(4)}
-            {this.renderQuestion(5)}
-            {this.renderQuestion(6)}
+            {this.renderQuestions()}
           </ol>  
         </div>
       </div>
